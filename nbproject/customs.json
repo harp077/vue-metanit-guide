@@ -1,0 +1,48 @@
+{
+    "elements": {
+        "n3-button": {},
+        "gcounter": {},
+        "lcounter": {},
+        "zverlist": {},
+        "global": {},
+        "counter": {},
+        "local": {},
+        "dropdown": {},
+        "div": {},
+        "baran": {},
+        "userslist": {},
+        "message-comp": {},
+        "hello": {},
+        "date-picker": {},
+        "btn": {},
+        "userinfo": {},
+        "osel": {}
+    },
+    "attributes": {
+        "v-bind:class": {},
+        "v-if": {},
+        "v-on:input": {},
+        "v-bind:href": {},
+        "v-html": {},
+        "v-model.trim": {},
+        "v-for": {},
+        "v-model.lazy": {},
+        "v-text": {},
+        "slot": {},
+        "v-model": {},
+        "v-bind:title": {
+            "context": "span"
+        },
+        "v-once": {},
+        "v-bind:style": {},
+        "ref": {},
+        "v-on:keyup.enter": {},
+        "v-model.number": {},
+        "v-on:click": {},
+        "v-else": {},
+        "v-else-if": {},
+        "v-model.lazy.trim": {},
+        "v-model.lazy.number": {},
+        "v-show": {}
+    }
+}

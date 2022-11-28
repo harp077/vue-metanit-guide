@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Vue metanit.com demo</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <!--
+        <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
+        <link rel="stylesheet" type="text/css" href="css/keen-ui.min.css">
+        -->
+        <link rel="stylesheet" type="text/css" href="css/n3components-2.4.4.min.css">
+        <!--
+        <script src="js/jquery.min.js"    type="text/javascript"></script>
+        <script src="js/jquery-ui.min.js" type="text/javascript"></script>
+        <script src="js/bootstrap.min.js" type="text/javascript"></script>
+        -->
+        <style>
+            .region{
+                background-color: #999;
+                width: 90px;
+                height: 90px;
+                display: inline-block;
+                margin: 10px;
+            }
+            .active{
+                background-color:red;
+            }
+            .bounded{
+                border: 5px solid magenta; 
+            }
+            .red{ 
+                background-color: red; 
+            }
+            .blue{ 
+                background-color: blue; 
+            }
+            .big{
+                width: 110px;
+                height: 110px;
+            }
+            .small{
+                width: 70px;
+                height: 70px;
+            } 
+            .normal{
+                width: 90px;
+                height: 90px;
+            }  
+            a:hover{ 
+                cursor:pointer; 
+            }
+        </style>        
+    </head>
+
+    <body>
+
+        <div id="app">
+            <div class="row">
+                <div class="col-md-offset-1 col-md-11">
+
+                    <hr><h3>Vue metanit.com demo</h3><hr>                    
+
+                    <h3 style="text-decoration: underline; color: magenta;">1. Основы Vue.js</h3>
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Привязка данных - data, {{}}</h4>
+                    <input type="text" v-on:input="setMessage" /><p>            
+                    <p>{{message + ' ' + name + age}}</p>            
+                    <p v-once><strong>v-once:</strong> {{message}}</p>
+                    <p>{{welcome()}}</p>
+                    <p>{{age > 17?'Больше 17 лет':'Меньше или = 17 лет' }}</p>
+                    <a v-bind:href="link">{{text}}</a>
+                    <div v-html="htmlMSG"></div>
+                    <div>{{htmlMSG}}</div>
+                    <span v-text="message"></span>
+                    <span>{{message}} - то же, что v-text=message</span>
+                    <pre style=" text-align: left;">
+                    Синтаксис двойных фигурных скобок не работает с HTML-атрибутами. 
+                    Используйте вместо него директиву v-bind: 
+                    button v-bind:disabled='isDisabled'
+                    a v-bind:href="url"
+                    Наиболее простой способ связывания данных — это текстовая интерполяция 
+                    с использованием синтаксиса Mustache (двойных фигурных скобок):
+                    Данные и DOM реактивно связаны. 
+                    В дополнение к интерполяции текста + декларативный рендеринг, 
+                    мы можем также связывать атрибуты элементов:
+                    span v-bind:title="titleAttr"
+                        Наведи курсор на пару секунд,
+                        чтобы увидеть динамически связанное значение titleAttr!
+                    span
+                    data: {
+                        titleAttr: 'Вы загрузили эту страницу в: ' + new Date().toLocaleString(),
+                    </pre> 
+                    <span v-bind:title="titleAttr">
+                        Наведи курсор на пару секунд,
+                        чтобы увидеть динамически связанное значение titleAttr!
+                    </span>                    
+                    <hr>
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Обработка событий - methods, v-on</h4>
+                    <button class="btn btn-success" v-on:click="counter++">counter++</button>
+                    <button class="btn btn-warning" v-on:click="if(counter>0) counter--;">counter--</button>                
+                    <button class="btn btn-success" v-on:click="increase(3, $event)">increase = +3</button>
+                    <button class="btn btn-warning" v-on:click="decrease(2)">decrease = -2</button>
+                    <p></p>
+                    <input placeholder="press Enter to counter++" v-on:keyup.enter="counter++">
+                    <p></p>
+                    <div style="border: 3px solid blue; width: 22%;"><strong>Counter = {{counter}}</strong></div> 
+                    <hr>
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Двусторонняя привязка: v-model</h4>
+                    <input placeholder="set name" type="text" v-model="name" /><br>
+                    <input placeholder="set name" type="text" v-model="name" />
+                    <p>Name = {{name}}</p>
+                    <input placeholder="set age" type="number" v-model="age" /><br>
+                    <input placeholder="set age" type="number" v-model="age" />
+                    <p>Age = {{age}}</p>            
+                    <input type="number" v-model="number" />
+                    <p>Факториал числа {{number}} равен {{factorial(number)}}</p>
+                    <hr>
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Вычисляемые свойства - computed:</h4>
+                    <pre style=" text-align: left;">
+                    Вместо вычисляемого свойства, мы можем указать ту же самую функцию в качестве метода. 
+                    С точки зрения конечного результата, оба подхода действительно делают одно и то же. 
+                    Но есть важное различие: вычисляемые свойства кешируются, основываясь на своих зависимостях. 
+                    Вычисляемое свойство будет пересчитано только тогда, когда изменится одна из его зависимостей.  
+                    computed: {
+                    // вычисляется только при изменении age !!!
+                    enabled: function () {
+                        if (this.age > 17) return "доступ ЕСТЬ";
+                        else               return "доступ НЕТ";
+                    } 
+                    </pre>
+                    <p>Имя: {{name}},   Возраст {{age}}</p>
+                    <p>Method: {{checkAge()}}</p>
+                    <p>Computed: {{enabled}}</p> 
+                    <hr>
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Привязка классов CSS: v-bind:class</h4>
+                    <div class="region" v-bind:class="{active: isActive, bounded: isBounded}" v-on:click="isActive=!isActive;isBounded=!isBounded"></div>
+                    <div class="region" v-bind:class="classObj"></div>
+                    <div class="region"></div>
+                    <p></p>
+                    <button class="btn btn-success" v-on:click="isActive=!isActive">set color</button>
+                    <button class="btn btn-warning" v-on:click="isBounded=!isBounded">set border</button>
+                    <p></p>
+                    <input type="color" v-model="color" /><br>
+                    <input placeholder="set color: red or blue" type="text" v-model="color" /><br> 
+                    <input placeholder="set size: big or small" type="text" v-model="size" /><br>
+                    <div class="region" v-bind:class="[color,size]"></div>
+                    <p></p>
+                    <hr>
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Привязка стилей CSS: v-bind:style</h4>
+                    <div class="region" v-bind:style="{'background-color': color, height: height + 'px', width: width+'px'}"></div>
+                    <div class="region" v-bind:style="styleObj"></div>
+                    <div class="region" v-bind:style="[colorStyle, sizeStyle]"></div>
+                    <br><br>
+                    <input type="color" v-model="color" /><br>
+                    <input placeholder="set color" type="text" v-model="color" />
+                    <br><br>
+                    <input type="number" v-model="width" />
+                    <br><br>
+                    <input type="number" v-model="height" /> 
+                    <p></p>
+                    <hr>
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Наблюдаемые свойства: watch</h4>
+                    <p>Введите число:<input v-model="watnum"></p>
+                    <p>{{ result }}</p>
+                    <p></p>
+                    <hr>
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">refs и управление html-элементами</h4>
+                    <h4 ref="golova">Hello world!</h4>
+                    <button v-on:click="gchange">Change</button>
+                    <p></p>
+                    <hr>
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Жизненный цикл Vue Object</h4>
+                    <!--<img src="img/36.png" alt="life">-->
+                    <h4>{{message}}</h4>
+                    <button v-on:click="message='Updated'">Update Vue Object</button>
+                    <button v-on:click="destroy">Destroy Vue Object</button>
+                    <p></p>
+                    <hr>
+
+                    <h3 style="text-decoration: underline; color: magenta;">2. Условный рендеринг и работа с массивами</h3>
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Директива v-if</h4>
+                    <p v-if="visible">true - параграф 1</p>
+                    <p v-else>false - параграф 2</p>
+                    <p>параграф N</p>
+                    мы можем применить v-if к псевдоэлементу template, который служит невидимой обёрткой и сам в результатах рендеринга не появляется.
+                    <template v-if="visible">
+                        <h4>Заголовок 1</h4>
+                        <p>Параграф 1</p>
+                    </template>
+                    <template v-else>
+                        <h4>Заголовок 2</h4>
+                        <p>Параграф 2</p>
+                    </template>            
+                    <button v-on:click="visible=!visible">condition = {{visible}}</button>
+                    <p></p>
+                    <input min="1" type="number" v-model="number" />
+                    <p v-if="number==1">Один</p>
+                    <p v-else-if="number==2">Два</p>
+                    <p v-else-if="number>2 && number<7">Несколько</p>
+                    <p v-else>Много</p> 
+                    <template v-if="number==1">
+                        <p>Один</p>
+                        <p>Параграф 1</p>
+                    </template>
+                    <template v-else-if="number==2">
+                        <p>Два</p>
+                        <p>Параграф 2</p>
+                    </template>
+                    <template v-else-if="number>2 && number<7">
+                        <p>Несколько</p>
+                    </template>
+                    <template v-else>
+                        <p>Много</p>
+                    </template>            
+                    <p></p>
+                    <hr>
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Директива v-show</h4>
+                    <pre style=" text-align: left;">
+                в отличие от v-if, v-show не изменяет структуру DOM, а манипулирует значением стилевого свойства display. 
+                То есть если условие в v-show возвращает false, то для элемента устанавливается стиль display:none;
+                Манипуляции с DOM через v-if снижают производительность. 
+                Когда возможно частое переключение видимости элемента, следует предпочитать v-show.                
+                    </pre>
+                    <button v-on:click="visible=!visible">{{visible?'Скрыть':'Отобразить'}}</button>             
+                    <div v-show="visible">
+                        <h4>Заголовок</h4>
+                        <p>Текст</p>
+                    </div>
+                    <p></p>
+                    <hr>  
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Директива v-for</h4>
+                    <ul>
+                        <li v-for="phone in phonelist">
+                            {{phone}}
+                        </li>
+                    </ul> 
+                    <strong>Индексы: v-for='(element, index) in array'</strong>
+                    <ul>
+                        <li v-for="(phone, index) in phonelist">вывод с индексом _ {{index}}). {{phone}}</li>
+                    </ul>            
+                    <ul>
+                        <li v-for="user in userlist">
+                            Имя: {{user.name}}, Возраст: {{user.age}}
+                        </li>
+                    </ul>
+                    <strong>Перебор объектов: v-for='(value, property) in obj'</strong>
+                    <ul>
+                        <li v-for="user in userlist">
+                            <span v-for="(value,key) in user">{{key}} : {{value}} ,  </span>
+                        </li>
+                    </ul>
+                    <strong>template</strong>
+                    <pre style=" text-align: left;">
+            v-for можно применить только к 1 html-элементу. Если необходимо, 
+            чтобы для каждого объекта из массива создавалось несколько html-элементов, 
+            то блок этих элементов следует обертывать элементом template:                   
+                    </pre>
+                    <ul>
+                        <template v-for="user in userlist">
+                            <li>Name: {{user.name}}</li>
+                            <li>Age: {{user.age}}</li>
+                        </template>
+                    </ul>
+                    <strong>Перебор чисел</strong>
+                    <div>
+                        <span v-for="n in 10">{{ n }} </span>
+                    </div>            
+                    <p></p>
+                    <hr> 
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Управление массивами</h4>
+                    <pre style=" text-align: left;">
+            определен ряд методов, с помощью которых можно управлять элементами массива:
+            push(), pop(), shift(), unshift(), splice(), sort(), reverse()
+            эти методы информируют Vue о том, что с массивом были произведены некоторые действия, 
+            и соответственно для этого массива может быть произведен повторный рендеринг на веб-странице.
+            кроме вышеописанных методов, которые изменяют отдельные элементы массив, есть ряд методов в javascript, 
+            которые возвращают новый массив, типа filter(), concat(), slice(). 
+            Результат таких функций лучше привязывать к вычисляемому свойству, 
+            которое позволит произвести повторный рендеринг элементов веб-страницы.
+                    </pre> 
+                    <p>
+                        <input type="text" v-model="newPhone" />
+                        <button v-on:click="phonelist.push(newPhone)">Добавить</button>
+                    </p>
+                    <ul>
+                        <li v-for="(phone, index) in phonelist">
+                            {{ phone }} <button v-on:click="phonelist.splice(index, 1)">Удалить</button>
+                    </ul>
+                    <strong>Установка элемента в массиве</strong>
+                    <pre style=" text-align: left;">
+            мы не можем просто по индексу переустановить элемент массива: this.phones[1] = 'Galaxy';
+            Для установки значения надо использовать метод Vue.set():
+            Vue.set(массив, индекс_элемента, новое_значение); 
+                    </pre>
+                    <input type="text" v-model="newPhone" />
+                    <button v-on:click="updateList">Set element in array</button>                
+                    <ul>
+                        <li v-for="phone in phonelist">{{ phone }}</li>
+                    </ul>
+                    <strong>Возвращаение нового массива</strong>
+                    <pre style=" text-align: left;">
+            Ряд методов, такие как slice, concat, filter, не изменяют текущий массив, 
+            а возвращают новый. Одно из решений может заключаться в переустановке массива. 
+            Например, используем метод slice, который возвращает часть массива:
+            this.phones = this.phones.slice(0,2);
+                    </pre> 
+                    <input v-model="start" type="number" />
+                    <input v-model="end" type="number" />
+                    <ul>
+                        <li v-for="phone in visibleList">{{ phone }}</li>
+                    </ul> 
+                    <strong>Фильтрация массива</strong>
+                    <p><input type="text" v-model="name" /></p>
+                    <ul>
+                        <li v-for="user in filteredList">{{ user.name }} - {{ user.age }}</li>
+                    </ul> 
+                    <strong>Сортировка списка</strong>
+                    <table style="width: 22%;" class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <td><a v-on:click="sortParam='name'">name</a></td>
+                                <td><a v-on:click="sortParam='age'">age</a></td>
+                            </tr>
+                        </thead>
+                        <tr v-for="user in sortedList">
+                            <td>{{user.name}}</td><td>{{user.age}}</td>
+                        </tr>
+                    </table>            
+                    <p></p>
+                    <hr>  
+
+                    <h3 style="text-decoration: underline; color: magenta;">3. Формы</h3>
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Элементы input и textarea</h4>
+                    <pre style=" text-align: left;">
+            Для работы с элементами ввода, в частности, с элементами 
+            input, select, textarea, применяется директива v-model, 
+            которая устанавливает двустороннюю привязку между элементом 
+            ввода и свойством объекта Vue. При этом v-model игнорирует 
+            значения атрибутов value, checked и selected, которые имеются у элементов ввода.                
+                    </pre>
+                    <div style=" width: 22%">
+                        <label >Логин</label>
+                        <input id="idlog" type="text" v-model="name" class="form-control" /><br>
+                        <label>Пароль</label>
+                        <input type="password" v-model="password" class="form-control" /><br>
+                        <label>Возраст</label>
+                        <input type="number" v-model="age" min="1" class="form-control" /><br>
+                        <label>Дата регистрации</label><br>
+                        <n3-datepicker
+                            v-model="date"
+                            format="yyyy-MM-dd">
+                        </n3-datepicker>
+                    </div>
+                    <div>
+                        <h4>Введенная информация</h4>
+                        <p>Логин: {{name}}</p>
+                        <p>Пароль: {{password}}</p>
+                        <p>Возраст: {{age}}</p>
+                        <p>Дата регистрации: {{date}}</p>
+                    </div>  
+                    <pre style=" text-align: left;">
+            Элемент textarea позволяет вводить многострочный текст и также связывается 
+            со свойством во Vue через директиву v-model. Прежде всего, если используется директива v-model, 
+            то внутри textarea мы НЕ можем поместить текст с помощью интерполяции:
+            И кроме того, при вводе текста в textarea с помощью клавиши Enter мы можем переносить строки. 
+            Чтобы переносы строк сохранялись при выводе текста на страницу, необходимо применять соответствующие стили css:
+            style="white-space: pre-line"
+                    </pre>
+                    <div style=" width: 22%">
+                        <label>Введите комментарий</label>
+                        <textarea v-model="comment" class="form-control"></textarea>
+                        <br>
+                        <div>
+                            <h4>Комментарий</h4>
+                            <p style="white-space: pre-line">{{comment}}</p>
+                        </div>
+                    </div>            
+                    <p></p>
+                    <hr>  
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Флажки (Checkbox)</h4>
+                    <input type="checkbox" id="checkbox" v-model="checked">
+                    <label for="checkbox">{{ checked }}</label> 
+                    <p></p>
+                    <strong>Custom-values вместо true/false:</strong>
+                    <br>
+                    <input type="checkbox" v-model="light" v-bind:true-value="on" v-bind:false-value="off" />
+                    <span v-if="light===on">Выключить</span>
+                    <span v-else>Включить</span>  
+                    <p></p>
+                    <strong>Привязка к массиву:</strong> 
+                    <pre style=" text-align: left;">
+            группа флажков может быть привязана к одному массиву. 
+            В этом случае при отметке флажка его значение попадает в массив:
+                    </pre>
+                    <input type="checkbox" value="Sam" v-model="selectedUsers">
+                    <label>Sam Knorr</label><br>
+                    <input type="checkbox" value="Ali" v-model="selectedUsers">
+                    <label>Ali Cuper</label><br>
+                    <span>Выбрано: {{selectedUsers}}</span>            
+                    <p></p>
+                    <strong>Привязка к обьекту:</strong>
+                    <pre style=" text-align: left;">
+            также флажок может быть привязан к целому объекту. 
+            Для динамической привязки у элемента html применяется атрибут v-bind:value:                
+                    </pre>
+                    <template v-for="user in userlist">
+                        <input type="checkbox" v-bind:value="user" v-model="selectedUsers">
+                        <label>{{user.name}}</label><br>
+                    </template>
+                    <ul>
+                        <li v-for="user in selectedUsers">{{user.name}} - {{user.age}}</li>
+                    </ul>
+                    <p></p>
+                    <hr> 
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Переключатели (radiobutton)</h4>
+                    <input type="radio" value="Bob" v-model="user">
+                    <label>Bob</label>
+                    <br>
+                    <input type="radio" value="Sam" v-model="user">
+                    <label>Sam</label>
+                    <br>
+                    <span>Выбрано: {{ user }}</span>
+                    <p></p>
+                    <strong>Привязка к обьекту:</strong>
+                    <br>
+                    <input type="radio" v-bind:value="{name:'Bob', age:25}" v-model="person">
+                    <label>Bob</label>
+                    <br>
+                    <input type="radio" v-bind:value="{name:'Sam', age:28}" v-model="person">
+                    <label>Sam</label>
+                    <br>
+                    <span>Выбрано: {{person.name}} - {{person.age}}</span>
+                    <p></p>
+                    <strong>Привязка к массиву обьектов:</strong> 
+                    <pre style=" text-align: left;">
+            оптимально хранить данные в массиве и динамически 
+            создавать по элементам массива группу радиокнопок:                
+                    </pre>
+                    <br>
+                    <template v-for="user in userlist">
+                        <input type="radio" v-bind:value="user" v-model="markedUser">
+                        <label>{{user.name}}</label><br>
+                    </template>
+                    <span v-if="markedUser!==null">Выбрано: {{markedUser.name}} - {{markedUser.age}}</span>            
+                    <p></p>
+                    <hr> 
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Список select</h4>
+                    <strong>Список с одиночным выбором</strong><br>
+                    <select v-model="user">
+                        <option>Tom</option>
+                        <option>Bob</option>
+                    </select>
+                    <span>Выбрано: {{user}}</span>
+                    <p></p>
+                    <strong>Список с множественным выбором</strong><br>
+                    <pre style=" text-align: left;">
+            Список select с множественным выбором можно связать с массивом, 
+            в который попадут все выбранные значения:      
+                    </pre>            
+                    <select v-model="selectedUsers" multiple>
+                        <option>Tom</option>
+                        <option>Bob</option>
+                        <option>Sam</option>
+                    </select>
+                    <span>Выбрано: {{selectedUsers}}</span>
+                    <p></p>
+                    <strong>Привязка к массиву обьектов:</strong>             
+                    <pre style=" text-align: left;">
+            Нередко источником для элементов списка служит массив, элементы которого - объекты. 
+            Для динамического создания списка из массива применяется директива v-for, 
+            а для привязки значения к элементу списка - атрибут v-bind:value:                
+                    </pre>
+                    <select v-model="user">
+                        <option v-for="man in userlist" v-bind:value="man.name">{{man.name}}</option>
+                    </select>
+                    <span>Выбрано: {{user}}</span>
+                    <br>мы можем выбирать и весь объект в целом:<br>
+                    <select v-model="markedUser">
+                        <option v-for="user in userlist" v-bind:value="user">{{user.name}}</option>
+                    </select>
+                    <span v-if="markedUser!==null">Выбрано: {{markedUser.name}} - {{markedUser.age}}</span>            
+                    <p></p>
+                    <strong>Привязка к объектам в списке с множественным выбором:</strong><br>
+                    <select v-model="selectedUsers" multiple>
+                        <option v-for="user in userlist" v-bind:value="user">{{user.name}}</option>
+                    </select>
+                    <p>Выбранные объекты</p>
+                    <ul>
+                        <li v-for="user in selectedUsers">{{user.name}} - {{user.age}}</li>
+                    </ul> 
+                    <p></p>
+                    <hr> 
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Модификаторы</h4>            
+                    <pre style=" text-align: left;">
+            .lazy
+            По умолчанию v-model обновляет связанные с полем ввода данные при 
+            каждом вызове события input. Т е при вводе каждого символа в текстовое поле
+            будут изменяться связанные данные. Но вместо этого мы можем вызывать 
+            обновление не после события input, а после события change. То есть связанные 
+            данные будут обновляться только после того, как текстовое поле потеряет фокус. 
+            Для этого применяется модификатор .lazy:                
+                    </pre>
+                    <input type="text" v-model.lazy="name"/>
+                    <span>Введено: {{name}}</span>
+                    <pre style=" text-align: left;">
+            .number
+            Модификатор .number позволяет автоматически конвертировать при вводе вводимое 
+            значение в число. Поскольку даже если мы установим у поля input атрибут 
+            type="number", то такое поле все равно будет возвращать строку:
+                    </pre>
+                    <input type="number" v-model.number="age"/>
+                    <span>Введено: {{age}}</span>
+                    <pre style=" text-align: left;">
+            .trim
+            .trim автоматом убивает пробелы в начале и конце введенной строки:
+                    </pre> 
+                    <input type="text" v-model.trim="message">
+                    <span>Введено: {{message}}</span> 
+                    <pre style=" text-align: left;">
+            можно объединять модификаторы: 
+            input  type="text"   v-model.lazy.trim='message'  
+            input  type="number" v-model.lazy.number='age'
+                    </pre>
+                    <p></p>
+                    <hr> 
+
+                    <h3 style="text-decoration: underline; color: magenta;">4. Компоненты</h3>
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Создание компонентов</h4>            
+                    <hello></hello>
+                    <p></p>
+                    <hr>
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Локальная и глобальная регистрация компонентов</h4> 
+                    <pre style=" text-align: left;">
+            Глобальные компоненты доступны для любого объекта Vue на веб-странице. 
+            Локальные компоненты доступны только в рамках определенных объектов Vue.
+            Для локальной регистрации компонентов у объекта Vue устанавливается свойство components:
+            Глобальный компонент определяется с помощью метода Vue.component().
+            И также здесь определен компонент cmplocal. Это объект, который передается как параметр в Vue 
+            и может иметь все те же свойства, template. Этот компонент локально регистрируется в объекте Vue:
+            components:{
+                'local': cmplocal
+            }                
+                    </pre>
+                    <global></global>
+                    <local></local>
+                    <p></p>
+                    <hr> 
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Состояние и поведение компонентов</h4> 
+                    <pre style=" text-align: left;">
+            Параметр data
+            Как и объекты Vue, компоненты могут содержать некоторые данные или состояние в виде параметра data. 
+            Но при этом в компонентах параметр data должен представлять функцию, которая и возвращает состояние компонента.
+            Параметр methods
+            Кроме состояния компоненты могут определять поведение в виде методов, 
+            которые определяются через параметр methods, как и в объектах Vue
+            Подобным образом можно определять данные в локально регистрируемых компонентах
+                    </pre>
+                    <gcounter></gcounter>
+                    <gcounter></gcounter>
+                    у обьектов выше нет разделяемого состояния !
+                    <lcounter></lcounter>
+                    <p></p>
+                    <hr> 
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Разделяемое состояние компонентов </h4> 
+                    <pre style=" text-align: left;">
+            можно определять некоторое общее состояние для нескольких компонентов. 
+            Для этого состояние определяется в виде внешнего объекта:
+                    </pre>
+                    <counter></counter>
+                    <counter></counter>
+                    у обьектов разделяемое состояние !
+                    <p></p>
+                    <hr>             
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Component Props </h4> 
+                    <pre style=" text-align: left;">
+            Статические свойства
+            Каждый компонент определяет параметр props, 
+            через который мы можем передать компоненту извне различные данные.
+            Чтобы передать свойству значение, у элемента компонента применяется атрибут, 
+            который называется также, как и свойство
+                    </pre>
+                    Статические свойства<br>
+                    <message-comp msg="msg-property" top="top-property"></message-comp>
+                    Динамические свойства<br>
+                    можно также устанавливать значения свойств динамически в зависимости от 
+                    введенных в поля ввода данных: <br>
+                    <input type="text" v-model="welcomemsg" /><br>
+                    <input type="text" v-model="welcometop" /><br>
+                    <message-comp v-bind:msg="welcomemsg" v-bind:top="welcometop"></message-comp> 
+                    Привязка к сложным объектам: <br>
+                    <input type="text" v-model="kozel.own" /><br><br>
+                    <input type="number" v-model.number="kozel.let" /><br><br>
+                    <baran v-bind="kozel"></baran>
+                    <p></p>
+                    <hr>
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Валидация props</h4> 
+                    <pre style=" text-align: left;">
+            мы можем указать тип для свойств. В качестве типов можно использовать следующие: 
+            String, Number, Boolean, Function, Object, Array, Symbol.
+            Например, в прошлой теме параметр props определялся следующим образом:
+            props: ['name', 'age']
+            Но фактически это объект, который мы можем переписать иным образом:
+            Vue.component('user', {
+                props: {name: String, age: Number},
+            });
+            Здесь параметр props определен как объект. name и age в этом объекте выступают в качестве свойств, 
+            при этом для каждого свойства устанавливается тип.
+            Для более точной валидации свойства для него можно задать ряд параметров
+            - type, required, default, validator:
+            Vue.component('user', {
+                props: {
+                    name: {
+                        type: String,
+                        required: true,
+                        default: 'Tom',
+                        validator: function(value){
+                            return value!='admin' && value!='';
+                        }
+                    }, 
+                    age: {
+                        type: Number,
+                        required: true,
+                        default: 18,
+                        validator: function(value){
+                            return value >= 0 && value < 100;
+                        }
+                    }
+                } // props
+            });
+                    </pre>
+                    <input type="text" v-model="kozel.own" /><br><br>
+                    <input type="number" v-model.number="kozel.let" /><br><br>
+                    <osel v-bind="kozel"></osel>
+                    <p></p>
+                    <hr>             
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">Передача массивов и сложных объектов</h4> 
+                    <pre style=" text-align: left;">
+            если мы не передадим значение для свойства osel из props,
+            то в этом случае свойство osel будет неопределено - ошибка. 
+            мы можем предусмотреть значение по умолчанию помощью параметра default. 
+            для объектов/массивов этот параметр должен представлять функцию, 
+            которая возращает начальное значение для свойства.
+                    </pre>
+                    <strong>Обьекты</strong><br>
+                    <input type="text" v-model="kozel.own" /><br>
+                    <input type="number" v-model.number="kozel.let" /><br>
+                    <userinfo v-bind:osel="kozel"></userinfo>
+                    <strong>Массивы</strong>
+                    <zverlist v-bind:narod="userlist"></zverlist>
+                    <p></p>
+                    <hr>  
+
+                    <h4 style="text-decoration: underline; color: mediumvioletred;">REST</h4> 
+                    <pre style=" text-align: left;">
+                http://echo.jsontest.com/title/ipsum/content/blah
+                https://jsonplaceholder.typicode.com/users
+                    </pre>
+                    <label>URL:</label>
+                    <input
+                        title="https://jsonplaceholder.typicode.com/users"
+                        v-on:keyup.enter="restget" 
+                        placeholder="https://jsonplaceholder.typicode.com/users" 
+                        style="width: 55%;" type="text" v-model="resturl" />
+                    <form role="form" class="form" onsubmit="return false;">
+                        <div class="form-group">
+                            <label for="data">JSON</label>
+                            <textarea v-model="textrest" id="data" class="form-control" rows="11"></textarea>
+                        </div>
+
+                        <ul>
+                            <li v-on:remove="this.restdata.gets.splice(index, 1)"
+                                v-for="(user, index) in restdata.gets">
+                                {{ user.id }}, {{ user.name }}
+                                <button v-on:click="this.$emit('remove')">X</button>
+                            </li>
+                        </ul> 
+
+                        <button v-on:click="restget()" id="get" type="button" class="btn btn-primary">get</button>
+                        <button class="btn btn-warning" v-on:click="restget()">rest get</button>
+                        <n3-button @click.native="restget()" type="primary" loading>n3-rest</n3-button>
+                        <n3-button v-on:click.native="restget()" type="info" badge="2" >n3-rest</n3-button>
+                    </form>                    
+
+                    <p></p>
+                    <hr>             
+
+                </div>
+            </div>
+        </div>
+
+        <h4 style="text-decoration: underline; color: mediumvioletred;"> </h4> 
+        <pre style=" text-align: left;">
+
+        </pre>
+
+        <p></p>
+        <hr>          
+
+
+        <!--<script src="https://unpkg.com/vue"></script>-->
+        <script src="js/vue.min.js"></script>
+        <script src="js/axios.min.js"></script>
+        <script src="js/vue-resource.min.js"></script>
+        <!--
+        <script src="js/keen-ui.min.js"></script> 
+        <script src="js/uiv-0.21.3.min.js"></script>        
+        <script src="js/en.js" id="lang"></script>
+        -->
+        <script src="js/n3components-2.4.4.min.js"></script>
+
+
+        <script>
+/*Vue.component('date-picker', {
+ data: function () {
+ return date;
+ },    
+ model: {
+ prop: 'indate',
+ event: 'change'
+ },    
+ props: {
+ indate: String,
+ value: String
+ },
+ template: '<input v-model="indate" type="date" class="form-control"/>',
+ mounted: function() {
+ $(this.$el).datepicker();
+ },
+ beforeDestroy: function() {
+ $(this.$el).datepicker('hide').datepicker('destroy');
+ }
+ });*/
+
+Vue.component('zverlist', {
+    props: {
+        narod: {
+            type: Array,
+            default: function () {
+                return [];
+            }
+        }
+    },
+    //props: ["narod"],
+    template: `<ul>
+                    <li v-for="user in narod">
+                        Name: {{user.name}}, Age: {{user.age}}
+                    </li>
+                </ul>`
+});
+Vue.component('userinfo', {
+    props: {
+        osel: {
+            type: Object,
+            default: function () {
+                return  {
+                    own: 'Bob',
+                    let: 22
+                };
+            }
+        }
+    },
+    template: `<div>
+                    <strong>Osel</strong> = Own: {{osel.own}}, Age: {{osel.let}}
+                </div>`
+});
+Vue.component('osel', {
+    props: {
+        own: {
+            type: String,
+            required: true,
+            default: 'my',
+            validator: function (value) {
+                return value !== 'admin' && value !== '';
+            }
+        },
+        let: {
+            type: Number,
+            required: true,
+            default: 11,
+            validator: function (value) {
+                return value >= 0 && value < 100;
+            }
+        }
+    },
+    template: '<div><h4>Osel: </h4> Own: {{own}}, Let: {{let}} </div>'
+});
+Vue.component('baran', {
+    props: ['own', 'let'],
+    template: '<div><h4>Kozel:</h4> Own: {{own}}, Let: {{let}} </div>'
+});
+Vue.component('message-comp', {
+    props: ['msg', 'top'],
+    template: '<h4>{{ msg }} <small>and</small> {{ top }}</h4>'
+});
+var state = {
+    sheader: 'Counter Program',
+    count: 0
+};
+Vue.component('counter', {
+    data: function () {
+        return state;
+    },
+    template: `<div><h4>{{sheader}}</h4>
+                    <button v-on:click="increase">+</button>
+                    <span>{{count}}</span>
+                </div>`,
+    methods: {
+        increase: function () {
+            this.count++;
+        }
+    }
+});
+Vue.component('gcounter', {
+    data: function () {
+        return {
+            gheader: 'gCounter Program',
+            gcount: 0
+        };
+    },
+    template: `<div><h4>{{gheader}}</h4>
+                    <button v-on:click="gincrease">+</button>
+                    <span>{{gcount}}</span>
+                </div>`,
+    methods: {
+        gincrease: function () {
+            this.gcount++;
+        }
+    }
+});
+Vue.component('hello', {
+    template: '<h2>Hello</h2>'
+});
+Vue.component('global', {
+    template: '<h4>global cmp</h4>'
+});
+var cmplocal = {
+    template: '<div>local cmp</div>'
+};
+var lcmpcounter = {
+    data: function () {
+        return {
+            lheader: 'lCounter Program',
+            lcount: 0
+        };
+    },
+    template: `<div><h4>{{lheader}}</h4>
+                    <button v-on:click="lincrease">+</button>
+                    <span>{{lcount}}</span>
+                </div>`,
+    methods: {
+        lincrease: function () {
+            this.lcount++;
+        }
+    }
+};
+
+//var userData = {name: 'Tom-', age: 23};
+
+var app = new Vue({
+    el: '#app',
+    ///////////////////
+
+    data: {
+        resturl: '',
+        titleAttr: 'Вы загрузили эту страницу в: ' + new Date().toLocaleString(),
+        message: 'Hello Vue!',
+        //userData,
+        name: 'Tom-',
+        age: 16,
+        text: 'Google',
+        link: 'https://google.com',
+        htmlMSG: '<h4>v-html: Hello htmlMSG !</h4>',
+        counter: 0,
+        number: 1,
+        watnum: 1,
+        result: '',
+        isActive: false,
+        isBounded: false,
+        color: "grey",
+        size: "normal",
+        width: 90,
+        height: 90,
+        visible: true,
+        phonelist: ['nokia', 'motorola', 'sony', 'iphone'],
+        userlist: [
+            {name: 'Tom', age: 22},
+            {name: 'Bob', age: 33},
+            {name: 'Sam', age: 44}
+        ],
+        newPhone: '',
+        start: 0,
+        end: 3,
+        sortParam: '',
+        password: '',
+        date: '',
+        comment: 'Комментарий....',
+        checked: true,
+        on: true,
+        off: false,
+        light: true,
+        selectedUsers: [],
+        user: '',
+        person: {},
+        markedUser: null,
+        welcomemsg: '',
+        welcometop: '',
+        kozel: {
+            own: '',
+            let: 18
+        },
+        restdata: {
+            gets: [],
+            errors: []
+        }
+    },
+    /////////////////////////
+
+    methods: {
+        welcome: function () {
+            return "Welcome harp07";
+        },
+        setMessage: function (event) {
+            this.message = event.target.value;
+        },
+        increase: function (n, event) {
+            //console.log(event);
+            this.counter = this.counter + n;
+        },
+        decrease: function (n) {
+            if (this.counter > 1)
+                this.counter = this.counter - n;
+        },
+        factorial: function (n) {
+            var result = 1;
+            for (var i = 1; i <= n; i++)
+                result *= i;
+            return result;
+        },
+        // вычисляется при любом изменении состояния vue
+        checkAge: function () {
+            //console.log("method");
+            if (this.age > 17)
+                return "доступ ЕСТЬ";
+            else
+                return "доступ НЕТ";
+        },
+        factor: function (newNumber) {
+            this.result = 'Идет вычисление факториала...';
+            var vm = this;
+            setTimeout(function () {
+                var res = 1;
+                for (var i = 1; i <= newNumber; i++) {
+                    res = res * i;
+                }
+                vm.result = 'Факториал числа ' + newNumber + ' равен ' + res;
+            }, 2000);
+        },
+        gchange: function () {
+            this.$refs.golova.innerText = "Welcome to Vue.js";
+            //alert('op');
+        },
+        destroy: function () {
+            this.$destroy();
+        },
+        updateList: function () {
+            Vue.set(this.phonelist, 1, this.newPhone);
+        },
+        restget: function () {
+            /// = axios
+            if (this.resturl !== '') {
+                axios.get(this.resturl)
+                        // arg =>  === function(arg) !!! - стрелочные функции
+                        .then(response => {
+                            this.restdata.gets = response.data;
+                        })
+                        .catch(error => {
+                            this.restdata.errors = push(error);
+                        });
+            }
+            ///// = vue-resource
+            /*this.$http.get(this.resturl)
+             // arg =>  === function(arg) !!! - стрелочные функции
+             .then(function(response) {
+             this.restdata.gets = response.body;
+             }, function(response) {
+             // error callback
+             });  */
+        }
+    },
+    ////////////////////////
+
+    computed: {
+        // вычисляется только при изменении age !!!
+        textrest: function () {
+            //return JSON.parse(JSON.stringify(this.restdata.gets));
+            return JSON.stringify(this.restdata.gets);
+            //this.restdata.gets;
+        },
+        enabled: function () {
+            //console.log("computed");
+            if (this.age > 17)
+                return "доступ ЕСТЬ";
+            else
+                return "доступ НЕТ";
+        },
+        classObj: function () {
+            return {
+                active: this.isActive, bounded: this.isBounded
+            };
+        },
+        styleObj: function () {
+            return {
+                'background-color': this.color,
+                height: this.height + 'px',
+                width: this.width + 'px'
+            };
+        },
+        colorStyle: function () {
+            return {
+                'background-color': this.color
+            };
+        },
+        sizeStyle: function () {
+            return {
+                height: this.height + 'px',
+                width: this.width + 'px'
+            };
+        },
+        visibleList: function () {
+            return this.phonelist.slice(this.start, this.end);
+        },
+        filteredList: function () {
+            var ima = '' + this.name;
+            ima = ima.toLowerCase();
+            return this.userlist.filter(function (elem) {
+                var el = '' + elem.name;
+                if (ima === '')
+                    return true;
+                else
+                    return el.toLowerCase().indexOf(ima) > -1;
+            });
+        },
+        sortedList() {
+            switch (this.sortParam) {
+                case 'name':
+                    return this.userlist.sort(sortByName);
+                case 'age':
+                    return this.userlist.sort(sortByAge);
+                default:
+                    return this.userlist;
+            }
+        }
+    },
+    ///////////////////////
+
+    watch: {
+        watnum: function (newNumber) {
+            if (newNumber > 0) {
+                this.factor(newNumber);
+            }
+        }
+    },
+    //////////////////////
+
+    components: {
+        'local': cmplocal,
+        'lcounter': lcmpcounter
+    },
+
+    // watch - применяются для выполнения асинхронных действий, особенно таких, 
+    // которые могут занять продолжительное время, например, отправка запроса на сервер.
+    // В данном случае определяется наблюдаемое свойство watnum, которое указывает на функцию. 
+    // Причем в параметре data также определяется свойство watnum. 
+    // При изменении свойства watnum, которое определено в секции data, 
+    // будет вызываться функция watnum, определенная в параметре watch. 
+    // Измененное значение будет передаваться в функцию через параметр newNumber.
+    //,template: '<p>Имя: {{name}}   Возраст {{age}}</p>'
+    ///////////////////// LIFE CICLE:
+    beforeCreate: function () {
+        console.log('beforeCreate()');
+    },
+    created: function () {
+        console.log('created()');
+    },
+    beforeMount: function () {
+        console.log('beforeMount()');
+    },
+    mounted: function () {
+        console.log('mounted()');
+    },
+    beforeUpdate: function () {
+        console.log('beforeUpdate()');
+    },
+    updated: function () {
+        console.log('updated()');
+    },
+    beforeDestroy: function () {
+        console.log('beforeDestroy()');
+    },
+    destroyed: function () {
+        console.log('destroyed()');
+    }
+});
+var sortByName = function (d1, d2) {
+    return d1.name.toLowerCase() > d2.name.toLowerCase();
+};
+var sortByAge = function (d1, d2) {
+    return d1.age > d2.age;
+};
+        </script>
+
+    </body>
+
+</html>
